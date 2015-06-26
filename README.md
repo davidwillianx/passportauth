@@ -1,1 +1,1 @@
-# passportauth >> access controll using passport model
+# access controll using passport model
