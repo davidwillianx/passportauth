@@ -1,1 +1,1 @@
-# access controll using passport model
+# access control using passport model
