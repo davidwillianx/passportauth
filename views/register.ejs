@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <title>Register you accout now, easy and faster</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-sm-6 col-sm-offset-3">
+        <h1><span class="fa fa-sign-in">SignUP</span></h1>
+        <form action="/signup" method="post">
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="text" name="email" class="form-controll">
+          </div>
+          <div class="form-group">
+            <label for="email">Password:</label>
+            <input type="password" name="password"  class="form-controll">
+          </div>
+          <input type="submit" class="btn btn-warning btn-lg" value="Register">
+        </form>
+        <p> Already have an account?</p>
+        <a href="/user/login">Login in now</a>
+      </div>
+    </div>
+  </body>
+</html>
