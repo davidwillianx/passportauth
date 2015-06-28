@@ -54,11 +54,23 @@ module.exports = function(passport){
       User.findOne({'local.email': req.body.email},function(error, user){
         if(error) done(error);
         else{
-          if(user.local.email === req.body.email
-            || user.validPassword(req.body.password))
-              return done(null,user);
-          else
-            return done(null,false,res.flash('loginMessage','usuario ou senha não condizem'));
+          //three context to achiev* user not found, is not the same password and also its everything ok with it
+
+          if(!user)
+            return done(
+                null
+                ,false
+                ,req.flash('loginMessage','usuario nao encontrado,'+
+                 '<a>clique aqui</a>  faca seu registro')
+            );
+          if(!user.validPassword(req.body.password))
+              return done(
+                null,
+                false,
+                req.flash('loginMessage','Dados de usuario nao condizem')
+              );
+
+          else return done(null,user);
         }
       });
     });
