@@ -2,5 +2,5 @@
 
 
 module.exports = {
-  'url' : 'mongodb://localhost/usingpassport'
+  'url' : 'mongodb://127.0.0.1/usingpassport'
 }
