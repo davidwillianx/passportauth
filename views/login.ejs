@@ -13,14 +13,14 @@
               <div class="alert alert-danger"><%= message %></div>
           <%}%>
           <h1><span class="fa fa-sign-in"></span>Signin</h1>
-          <form action="/login" id="register">
+          <form action="/login" method='post' id="register">
             <div class="form">
               <label for="email">Email: </label>
               <input type="text" name="email" class="form-controll"/>
             </div>
             <div class="form">
               <label for="password">Password: </label>
-              <input type="text" name="password"  class="form-controll"/>
+              <input type="password" name="password"  class="form-controll"/>
             </div>
             <input class="btn" type="submit" value="Register"/>
           </form>

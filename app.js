@@ -10,11 +10,12 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var mongoose = require('mongoose');
 
-require('./config/passport')(passport);
+
 
 var configAuthSchema = require('./config/database');
 mongoose.connect(configAuthSchema.url);
 
+require('./config/passport')(passport);
 var index = require('./routes/index');
 
 

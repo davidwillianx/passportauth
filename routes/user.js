@@ -12,14 +12,21 @@ module.exports = function (app,passport) {
     res.render('login',{message: req.flash('loginMessage')});
   });
 
+  app.post('/login',passport.authenticate('login',{
+      successRedirect:'/dashboard',
+      failureRedirect:'/login',
+      failureFlash: true
+  }));
+
   app.get('/signup',function(req, res){
-    res.render('register', {message: req.flash('singupmessage')});
+    res.render('register.ejs', {message: req.flash('signupmessage')});
   });
 
   app.post('/signup',passport.authenticate('local-signup',{
-    successRedirect: '/dashboard',
+    successRedirect: '/login',
     failureRedirect: '/signup',
-    failureFlash: true
+    failureFlash: true,
+    successFlash: true
   }));
 
   app.get('/dashboard',isAuthenticated,function(req, res){

@@ -5,9 +5,13 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
     <title>Register you accout now, easy and faster</title>
+
   </head>
   <body>
     <div class="container">
+      <% if(message.length > 0) { %>
+         <span class="alert alert-danger"> Alert:: <%= message %> </span>
+      <%} %>
       <div class="col-sm-6 col-sm-offset-3">
         <h1><span class="fa fa-sign-in">SignUP</span></h1>
         <form action="/signup" method="post">
@@ -22,7 +26,7 @@
           <input type="submit" class="btn btn-warning btn-lg" value="Register">
         </form>
         <p> Already have an account?</p>
-        <a href="/user/login">Login in now</a>
+        <a href="/login">Login in now</a>
       </div>
     </div>
   </body>
