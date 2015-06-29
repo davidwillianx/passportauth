@@ -104,4 +104,33 @@ module.exports = function(passport){
         });
       });
   }));
+
+  passport.use(new FacebookStrategy({
+    clientID: Auth.facebook.clientID,
+    clientSecret: Auth.facebook.clientSecret,
+    callbackURL: Auth.facebook.callbackURL,
+    passReqToCallback: true
+  },function(req, accessToken, refreshToken, profile, done){
+      process.nextTick(function(){
+          if(!req.user){
+            User.findOne({'facebook.id': profile.id},function (error,user) {
+              if(error)
+                return done(error);
+              return done(null,user);
+            });
+          }else {
+            var user = req.user;
+            user.facebook.id = profile.id;
+            user.facebook.token = accessToken;
+            user.facebook.email = profile.emails[0].value;
+            user.facebook.name = profile.name.givenName+ ' ' + profile.name.familyName;
+
+            user.save(function (error) {
+              if(error)
+                throw error;
+              return done(null,user);
+            })
+          }
+      });
+  }));
 }

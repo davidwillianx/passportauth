@@ -45,6 +45,20 @@ module.exports = function (app,passport) {
     failureFlash: true
   }));
 
+  app.get('/connect/facebook',passport.authorize('facebook',{scope: 'email'}));
+  app.get('/connect/facebok',passport.authorize('facebok',{
+    successRedirect: '/dashboard',
+    failureRedirect: '/dashboard',
+    failureFlash: true
+  }));
+
+  app.get('/auth/twitter',passport.authenticate('twitter'));
+  app.get('/auth/twitter',passport.authenticate('twiiter',{
+    successRedirect: '/dashboard',
+    failureRedirect: '/login',
+    failureFlash: true
+  }));
+
 
   function isAuthenticated(req , res , next){
     if(req.isAuthenticated())
