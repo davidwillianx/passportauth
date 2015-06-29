@@ -25,18 +25,22 @@ module.exports = function (app,passport) {
   app.post('/signup',passport.authenticate('local-signup',{
     successRedirect: '/login',
     failureRedirect: '/signup',
-    failureFlash: true,
-    successFlash: true
+    failureFlash: true
+  }));
+
+  app.get('/connect/local',isAuthenticated,function (req,res) {
+    res.render('local-connect',{message : req.flash('connectlocal')});
+  })
+  app.post('/connect/local',passport.authorize('login',{
+    succesRedirect : '/dashboard',
+    failureRedirect: '/connect/local',
+    failureFlash: true
   }));
 
   app.get('/dashboard',isAuthenticated,function(req, res){
     res.render('dashboard',{user: req.user});
   });
 
-  app.get('/logout',function(req, res){
-    req.logout();
-    res.redirec('/');
-  });
 
   app.get('/auth/facebook',passport.authenticate('facebook',{scope: 'email'}));
   app.get('/auth/facebook/callback',passport.authenticate('facebook',{
@@ -52,13 +56,10 @@ module.exports = function (app,passport) {
     failureFlash: true
   }));
 
-  app.get('/auth/twitter',passport.authenticate('twitter'));
-  app.get('/auth/twitter',passport.authenticate('twiiter',{
-    successRedirect: '/dashboard',
-    failureRedirect: '/login',
-    failureFlash: true
-  }));
-
+  app.get('/logout',function(req, res){
+    req.logout();
+    res.redirec('/');
+  });
 
   function isAuthenticated(req , res , next){
     if(req.isAuthenticated())
