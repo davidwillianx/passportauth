@@ -38,6 +38,13 @@ module.exports = function (app,passport) {
     res.redirec('/');
   });
 
+  app.get('/auth/facebook',passport.authenticate('facebook',{scope: 'email'}));
+  app.get('/auth/facebook/callback',passport.authenticate('facebook',{
+    successRedirect: '/dashboard',
+    failureRedirect:'/login',
+    failureFlash: true
+  }));
+
 
   function isAuthenticated(req , res , next){
     if(req.isAuthenticated())

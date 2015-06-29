@@ -1,9 +1,12 @@
 
 var LocalStrategy = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
+
 var User = require('../model/user');
+var Auth = require('./auth');
 
 module.exports = function(passport){
-
+  // Local login/logout business-----------------
   passport.serializeUser(function(user,done){
     done(null, user.id);
   });
@@ -54,8 +57,6 @@ module.exports = function(passport){
       User.findOne({'local.email': req.body.email},function(error, user){
         if(error) done(error);
         else{
-          //three context to achiev* user not found, is not the same password and also its everything ok with it
-
           if(!user)
             return done(
                 null
@@ -75,6 +76,32 @@ module.exports = function(passport){
       });
     });
   }));
+  //Facebook login/ logout
+  passport.use(new FacebookStrategy({
+    clientID: Auth.facebook.clientID,
+    clientSecret: Auth.facebook.clientSecret,
+    callbackURL: Auth.facebook.callbackURL
+  },function(accessToken, refreshToken, profile, done){
+      process.nextTick(function(){
+        User.findOne({'facebook.id' : profile.id},function(error, user){
+            if(error)
+              return done(error);
+            if(user)
+              return done(null, user);
+            else {
+              newUser = new User();
+              newUser.facebook.id = profile.id;
+              newUser.facebook.token  = accessToken;
+              newUser.facebook.name = profile.name.givenName +' '+ profile.name.familyName;
+              newUser.facebook.email = profile.emails[0].value;
 
-
+              newUser.save(function(error){
+                if(error)
+                  throw error;
+                return done(null, newUser);
+              })
+            }
+        });
+      });
+  }));
 }
