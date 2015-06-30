@@ -80,9 +80,11 @@ module.exports = function(passport){
     clientID: Auth.facebook.clientID,
     clientSecret: Auth.facebook.clientSecret,
     callbackURL: Auth.facebook.callbackURL,
+    profileFields: ['id', 'name','picture.type(large)', 'emails', 'displayName', 'about', 'gender'],
     passReqToCallback: true
   },function(req, accessToken, refreshToken, profile, done){
       process.nextTick(function(){
+        console.log(profile);
           if(!req.user){
             User.findOne({'facebook.id': profile.id},function (error,user) {
               if(error)
@@ -93,6 +95,7 @@ module.exports = function(passport){
                 newUser.facebook.id = profile.id;
                 newUser.facebook.token = accessToken;
                 newUser.facebook.email = profile.emails[0].value;
+                newUser.facebook.picture = profile.photos[0].value;
                 newUser.facebook.name = profile.name.givenName
                                       + ' '+profile.name.familyName;
                 newUser.save(function (error) {
@@ -101,7 +104,7 @@ module.exports = function(passport){
                   return done(null, newUser);
                 });
               }else {
-                return done(null,user)
+                return done(null,user);
               }
             });
           }else {
@@ -109,11 +112,13 @@ module.exports = function(passport){
             user.facebook.id = profile.id;
             user.facebook.token = accessToken;
             user.facebook.email = profile.emails[0].value;
+            user.facebook.picture = profile.photos[0].value;
             user.facebook.name = profile.name.givenName+ ' ' + profile.name.familyName;
 
             user.save(function (error) {
               if(error)
                 throw error;
+              user.facebook.pic = profile.photos[0].value;
               return done(null,user);
             })
           }

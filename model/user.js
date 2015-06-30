@@ -10,7 +10,8 @@
       id: String,
       token: String,
       name: String,
-      email: String
+      email: String,
+      picture: String
     }
   });
 
