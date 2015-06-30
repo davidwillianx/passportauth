@@ -25,37 +25,53 @@ module.exports = function(passport){
 
   },function(req, email, password, done){
     process.nextTick(function(){
-        User.findOne({'local.email': req.body.email},function(error, user){
-          if(error) done(error);
-          else{
-            if(!user)
-              return done(
-                  null
-                  ,false
-                  ,req.flash('loginMessage','usuario nao encontrado,'+
-                   'faca seu registro')
-              );
-            if(!user.validPassword(req.body.password))
-                return done(
-                  null,
-                  false,
-                  req.flash('loginMessage','Dados de usuario nao condizem')
-                );
+      User.findOne({'local.email'  : email}, function(error, user){
+        if(error)
+          return done(error);
+        if(!user)
+          return done(null, false, req.flash('loginMessage','usuario nao encontrado'));
 
-            else return done(null,user);
-          }
-        });
+        if(!user.validPassword(password))
+            return done(null, false, req.flash('loginMessage','Dados de acesso incorretos'));
+        else {
+          return done(null, user);
+        }
+      });
     });
   }));
 
-  passport.use('local-signup', new LocalStrategy({
+  passport.use('signup', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
   },function (req,email,password,done) {
       process.nextTick(function(){
-        User.findOne({'local.email' : email},function(erro, existingUser){
-            //find and check if email already exist
+        User.findOne({'local.email' : email},function(error, existingUser){
+            if(error)
+              return done(error);
+            if(existingUser)
+              return done(null, false, req.flash('','Email já utilizado tente '
+              +'outro, caso tenha esquecido sua senha recupere aqui <<'));
+
+            if(req.user){
+              var user = req.user;
+              user.local.email = email;
+              user.local.password = user.generateHash(password);
+              user.save(function (error) {
+                if(error)
+                  throw error;
+                return done(null, user);
+              });
+            }else{
+              var newUser = new User();
+              newUser.local.email  = email;
+              newUser.local.password  = newUser.generateHash(password);
+              newUser.save(function(error){
+                if(error)
+                  throw error;
+                return done(null, newUser);
+              });
+            }
         });
       });
   }))
@@ -87,7 +103,6 @@ module.exports = function(passport){
               }else {
                 return done(null,user)
               }
-
             });
           }else {
             var user = req.user;
