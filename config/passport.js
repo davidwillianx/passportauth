@@ -84,7 +84,6 @@ module.exports = function(passport){
     passReqToCallback: true
   },function(req, accessToken, refreshToken, profile, done){
       process.nextTick(function(){
-        console.log(profile);
           if(!req.user){
             User.findOne({'facebook.id': profile.id},function (error,user) {
               if(error)
@@ -118,9 +117,8 @@ module.exports = function(passport){
             user.save(function (error) {
               if(error)
                 throw error;
-              user.facebook.pic = profile.photos[0].value;
               return done(null,user);
-            })
+            });
           }
       });
   }));
